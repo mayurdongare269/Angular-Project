@@ -1,0 +1,100 @@
+<!-- <p>todos works!</p> -->
+<div class="todo-container">
+  <header class="page-header">
+    <h1>My Todo List</h1>
+    <p>Organize your tasks and get things done.</p>
+  </header>
+
+  <section class="stats">
+    <div class="stat-card">
+      <span>Total Tasks</span>
+      <strong>{{ todos.length }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Active</span>
+      <strong>{{ activeCount }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Completed</span>
+      <strong>{{ completedCount }}</strong>
+    </div>
+  </section>
+
+  <form class="add-form" (ngSubmit)="addTodo()">
+    <input
+      type="text"
+      name="newTitle"
+      [(ngModel)]="newTitle"
+      placeholder="What do you need to do?"
+      maxlength="200"
+      required
+    />
+
+    <button type="submit" [disabled]="!newTitle.trim() || saving">
+      {{ saving ? 'Adding...' : 'Add Task' }}
+    </button>
+  </form>
+
+  @if (error) {
+    <p class="error-message" role="alert">{{ error }}</p>
+  }
+
+  <div class="toolbar">
+    <div class="filters">
+      <button
+        type="button"
+        [class.selected]="filter === 'all'"
+        (click)="filter = 'all'"
+      >
+        All
+      </button>
+
+      <button
+        type="button"
+        [class.selected]="filter === 'active'"
+        (click)="filter = 'active'"
+      >
+        Active
+      </button>
+
+      <button
+        type="button"
+        [class.selected]="filter === 'completed'"
+        (click)="filter = 'completed'"
+      >
+        Completed
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="clear-btn"
+      [disabled]="completedCount === 0"
+      (click)="clearCompleted()"
+    >
+      Clear Completed
+    </button>
+  </div>
+
+  @if (loading) {
+    <p class="status-message">Loading tasks...</p>
+  } @else if (filteredTodos.length === 0) {
+    <p class="status-message">No tasks found. Add a new task!</p>
+  } @else {
+    <section class="todo-list">
+      @for (todo of filteredTodos; track todo.id) {
+        <app-todo-item
+          [todo]="todo"
+          (toggle)="toggleTodo($event)"
+          (remove)="deleteTodo($event)"
+        />
+      }
+    </section>
+  }
+
+  <footer class="page-footer">
+    {{ activeCount }} task(s) remaining
+  </footer>
+</div>

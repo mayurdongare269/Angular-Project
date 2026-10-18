@@ -1,0 +1,21 @@
+<!-- <p>todo-item works!</p> -->
+<div class="todo-item">
+  <input
+    type="checkbox"
+    [checked]="todo.completed"
+    (change)="toggle.emit(todo)"
+    [attr.aria-label]="'Mark ' + todo.title + ' as completed'"
+  />
+
+  <span [class.completed]="todo.completed">
+    {{ todo.title }}
+  </span>
+
+  <button
+    type="button"
+    class="delete-btn"
+    (click)="remove.emit(todo.id)"
+  >
+    Delete
+  </button>
+</div>
